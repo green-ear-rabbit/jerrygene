@@ -1,0 +1,32 @@
+---
+title: "analysis"
+author: "Wanqi"
+date: "2020/7/28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+require(tidyverse)
+require(readr)
+```
+
+# data input
+
+the data is output directly from Varshifter, without any filter
+
+```{r}
+jerry<-readr::read_csv("data/jerry.csv")
+```
+
+```{r}
+dim(jerry)
+```
+
+```{r}
+
+```
+

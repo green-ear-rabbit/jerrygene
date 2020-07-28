@@ -26,7 +26,10 @@ jerry<-readr::read_csv("data/jerry.csv")
 dim(jerry)
 ```
 
-```{r}
+# data structure
 
-```
+spread to long form
+
+
+
 

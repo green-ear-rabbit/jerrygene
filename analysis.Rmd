@@ -31,5 +31,93 @@ dim(jerry)
 spread to long form
 
 
+```{r}
+jerry_long <- jerry %>% gather(key = "mouse", value = "gtype", c(seq(46, ncol(jerry), 3)))
+
+```
+
+double check
+
+```{r}
+nrow(jerry_long)==nrow(jerry)*79
+```
+# category, valve disease or not
+
+```{r}
+jerry_long$valve<-ifelse(jerry_long$mouse %in% c("Y1432_FDHE20H101444-1a-7UDI1308-5UDI1308_BH33VNDSXY-new_L3.NA","Y1454_FDHE20H101450-1a-7UDI1309-5UDI1309.NA","Y149_FKDO192037733-1A_HNGNHDSXX_L3.NA", "Y1620_FDHE20H101448-1a-7UDI1320-5UDI1320_BH33VNDSXY-new_L3.NA", "Y1643_FDHE20H101444-1a-7UDI1323-5UDI1323_BH33VNDSXY-new_L3.NA", "Y1656_FDHE20H101445-1a-7UDI1324-5UDI1324_BH33VNDSXY-new_L3.NA", "Y1696_FDHE20H101445-1a-7UDI1313-5UDI1313_BH33VNDSXY-new_L3.NA", "Y1763_FDHE20H101446-1a-7UDI1326-5UDI1326_BH33VNDSXY-new_L3.NA", "Y1990_FDHE20H101447-1a-7UDI1332-5UDI1332.NA", "Y2008_FDHE20H101445-1a-7UDI1336-5UDI1336_BH33VNDSXY-new_L3.NA", "Y2164_FDHE20H101451-1a-7UDI1344-5UDI1344.NA","Y2165_FDHE20H101449-1a-7UDI1346-5UDI1346.NA","Y2165_FDHE20H101449-1a-7UDI1346-5UDI1346.NA", "Y2167_FDHE20H101451-1a-7UDI1343-5UDI1343.NA","Y2197_FDHE20H101797-1a-7UDI1338-5UDI1338_BH35N5DSXY-new_L3.NA", "Y2199_FDHE20H101799-1a-7UDI1341-5UDI1341_BH35N5DSXY-new_L3.NA", "Y2234_FDHE20H101798-1a-7UDI1343-5UDI1343_BH35N5DSXY-new_L3.NA", "Y2236_FDHE20H101799-1a-7UDI1344-5UDI1344_BH35N5DSXY-new_L3.NA", "Y2349_FDHE20H101451-1a-7UDI1348-5UDI1348.NA", "Y2370_FDHE20H101451-1a-7UDI1353-5UDI1353.NA", "Y2370_FDHE20H101451-1a-7UDI1353-5UDI1353.NA", "Y374_FKDO192037755-1A_HTW3CDSXX_L1.NA", "Y380_FKDO192037737-1A_HNGNHDSXX_L3.NA", "Y445_FKDO192037738-1A_HNGNHDSXX_L4.NA", "Y448_FKDO192037739-1A_HTW3CDSXX_L1.NA", "Y509_FKDO192037757-1A_HNGNHDSXX_L4.NA", "Y810_FKDO192037746-1A_HNGNHDSXX_L3.NA", "Y904_FKDO192037747-1A_HNGNHDSXX_L4.NA", "Y989_FKDO192037752-1A_HNGNHDSXX_L4.NA"),1,0)
+```
+
+```{r}
+table(jerry_long$valve)
+166482/6166
+```
+# view
+
+separate the gene
+
+```{r}
+jerry_long$gtype2<-jerry_long$gtype
+jerry_long <- separate(jerry_long, gtype, c("gtype_s", "gtype_b"), sep = ':')
+```
+
+```{r}
+indel <- jerry_long %>% filter(is.na(.$gtype_b)==FALSE)
+two <- jerry_long %>% filter (is.na(.$gtype_b)) 
+```
+
+```{r}
+indel [,c(4,8:9, 203:208)]
+```
+
+```{r}
+two$gtype_s<-substr(two$gtype2, 1,1)
+two$gtype_b<-substr(two$gtype2, 2,2)
+two[,c(4,8:9, 203:208)]
+```
+
+
+```{r}
+rb<- rbind(two, indel)
+```
+
+
+```{r}
+s<-rb[,c(4,8:9, 203:208)]
+s
+```
+
+
+
+# analysis
+
+
+let's filter them, which only include rows with mutation
+
+```{r}
+mut<- rb %>% filter(.$gtype_s == .$var_allele | .$gtype_b == .$var_allele )
+```
+
+```{r}
+mstr <- mut[,c(2:3,4,8:9, 204:208)]
+mstr
+```
+
+
+
+
+
+```{r}
+comp<- mut%>% 
+    group_by(Gene_name) %>%
+    group_by(LeftFlank) %>%
+    mutate(frequency = n(), nvalve = sum(valve)) %>%  
+    select(Gene_name, LeftFlank, frequency, nvalve) %>% 
+    distinct()
+comp
+```
+
+```{r}
+comp$nnvalve<- comp$frequency- comp$nvalve
+```
 
 

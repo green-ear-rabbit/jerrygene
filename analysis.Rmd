@@ -82,7 +82,7 @@ rb<- rbind(two, indel)
 
 
 ```{r}
-s<-rb[,c(4,8:9, 203:208)]
+s<-rb[,c(2:6,8:9, 203:208)]
 s
 ```
 
@@ -108,10 +108,9 @@ mstr
 
 ```{r}
 comp<- mut%>% 
-    group_by(Gene_name) %>%
     group_by(LeftFlank) %>%
     mutate(frequency = n(), nvalve = sum(valve)) %>%  
-    select(Gene_name, LeftFlank, frequency, nvalve) %>% 
+    select(Gene_name, LeftFlank, type, muttype, frequency, nvalve) %>% 
     distinct()
 comp
 ```

@@ -98,7 +98,7 @@ mut<- rb %>% filter(.$gtype_s == .$var_allele | .$gtype_b == .$var_allele )
 ```
 
 ```{r}
-mstr <- mut[,c(2:3,4,8:9, 204:208)]
+mstr <- mut[,c(2:6,8:9, 204:208)]
 mstr
 ```
 
